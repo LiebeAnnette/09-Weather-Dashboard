@@ -10,8 +10,7 @@ This program is aweather dashboard application that calls the OpenWeather API an
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [Tests](#tests)
-<!-- TODO inlude a License Link -->
-- [License](#license) 
+- [License](#license) <!-- TODO inlude a License Link? suggested in Homework feedback from Challenge 7-->
 - [Badges](#badges)
 - [Questions](#questions)
 
@@ -23,7 +22,8 @@ git clone git@github.com:LiebeAnnette/09-Weather-Dashboard
 Node.js
 Git
 A package manager such as npm
-<!-- add more prequisites such as the API key? -->
+<!-- Vite? -->
+<!-- add more prerequisites such as the API key? -->
 
 ## Usage
 
