@@ -33,6 +33,48 @@ const humidityEl: HTMLParagraphElement = document.getElementById(
 API Calls
 
 */
+const form = document.querySelector('form');
+if (!form) {
+    console.error('Form not found!');
+} else {
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        await handleFormSubmit();
+    });
+}
+
+async function handleFormSubmit() {
+  const cityInput = document.querySelector('#city') as HTMLInputElement | null;
+  if (!cityInput) {
+      console.error('City input field not found');
+      return;
+  }
+
+  const cityName = cityInput.value.trim();
+  if (!cityName) {
+      console.error('City name is required');
+      return;
+  }
+
+  try {
+      const response = await fetch('/weather', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ city: cityName }),
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to fetch weather data');
+      }
+
+      const weatherData = await response.json();
+
+      displayWeather(weatherData, cityName);
+  } catch (error) {
+      console.error('Error fetching weather:', error);
+  }
+}
+
 
 const fetchWeather = async (cityName: string) => {
   const response = await fetch('/api/weather/', {
@@ -289,3 +331,16 @@ searchForm?.addEventListener('submit', handleSearchFormSubmit);
 searchHistoryContainer?.addEventListener('click', handleSearchHistoryClick);
 
 getAndRenderHistory();
+
+function displayWeather(data: any, cityName: string) {
+  const weatherContainer = document.querySelector('#weather-container');
+  if (weatherContainer) {
+      weatherContainer.innerHTML = `
+          <h2>Weather for ${cityName}</h2>  
+          <p>Temperature: ${data.current?.temperature ?? 'N/A'}°C</p>
+          <p>Conditions: ${data.current?.description ?? 'Unknown'}</p>
+          <p>Humidity: ${data.current?.humidity ?? 'N/A'}%</p>
+          <p>Wind Speed: ${data.current?.windSpeed ?? 'N/A'} km/h</p>
+      `;
+  }
+}
