@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 
+// am I supposed to just uncomment this?
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
