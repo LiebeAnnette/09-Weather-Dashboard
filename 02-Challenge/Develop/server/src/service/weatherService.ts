@@ -20,7 +20,7 @@ interface Coordinates {
       this.windSpeed = windSpeed;
     }
   }
-  
+
 // TODO: Complete the WeatherService class
 class WeatherService {
   // X TODO: Define the baseURL, API key, and city name properties
@@ -36,7 +36,7 @@ class WeatherService {
 
   // TODO: Create fetchLocationData method
   private async fetchLocationData(query: string): Promise<any> {
-    const response = await fetch(this.buildGeocodeQuery());
+    const response = await fetch(query);
   return await response.json();
   }
   // TODO: Create destructureLocationData method
@@ -57,7 +57,7 @@ class WeatherService {
 }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData(): Promise<Coordinates> {
-    const locationData = await this.fetchLocationData(this.cityName);
+    const locationData = await this.fetchLocationData(this.buildGeocodeQuery());
   return this.destructureLocationData(locationData);
   }
   // TODO: Create fetchWeatherData method
@@ -101,7 +101,7 @@ class WeatherService {
 }
 
 export default new WeatherService(
-  process.env.BASE_URL || "",
+  process.env.API_BASE_URL || "",
   process.env.API_KEY || "",
   "New York" // Default city
 );

@@ -23,7 +23,7 @@ app.use(routes);
 
 // Start the server on the port
 app.listen(PORT, () => 
-    console.log(`Listening on PORT: ${PORT}`)
+    console.log(`Listening on PORT:http://localhost:${PORT}`)
 );
 
 // QUESTION! The example from Lesson 11/server.ts has the http...
