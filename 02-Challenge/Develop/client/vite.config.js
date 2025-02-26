@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
-// am I supposed to just uncomment this?
-https://vitejs.dev/config/
+// am I supposed to just uncomment this? why is this here?
+// https://vitejs.dev/config/
 export default defineConfig({
   server: {
     port: 3000,

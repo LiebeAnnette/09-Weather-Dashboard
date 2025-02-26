@@ -1,10 +1,14 @@
 import dotenv from 'dotenv';
+import dayjs, {type Dayjs} from 'dayjs';
 dotenv.config();
 
 // X TODO: Define an interface for the Coordinates object
 interface Coordinates {
   latitude: number;
   longitude: number;
+  country: string;
+  state: string;
+  name: string;
 }
 // TODO: Define a class for the Weather object
   class Weather {
@@ -12,32 +16,44 @@ interface Coordinates {
     description: string;
     humidity: number;
     windSpeed: number;
+    cityName: string;
+    date: Dayjs | string;
   
-    constructor(temperature: number, description: string, humidity: number, windSpeed: number) {
+    constructor(temperature: number, description: string, humidity: number, windSpeed: number, cityName: string, date: Dayjs | string) {
       this.temperature = temperature;
       this.description = description;
       this.humidity = humidity;
       this.windSpeed = windSpeed;
+      this.cityName = cityName;
+      this.date = date;
     }
   }
 
 // TODO: Complete the WeatherService class
 class WeatherService {
   // X TODO: Define the baseURL, API key, and city name properties
-  baseURL: string;
-  APIKey: string;
-  cityName: string;
+  private baseURL: string;
+  private APIKey: string;
+  private cityName: string;
 
-  constructor(baseURL:string, APIkey: string, cityName: string) {
-    this.baseURL = baseURL;
-    this.APIKey = APIkey;
-    this.cityName = cityName;
+  constructor() {
+    this.baseURL = process.env.API_BASE_URL || "";
+    this.APIKey = process.env.API_KEY || "";
+    this.cityName = "";
   }
 
   // TODO: Create fetchLocationData method
-  private async fetchLocationData(query: string): Promise<any> {
-    const response = await fetch(query);
-  return await response.json();
+  private async fetchLocationData(query: string) {
+    try {
+      const response: Coordinates[] = await fetch(query).then(
+        (res) => res.json()
+      );
+      return await response[0];
+
+    } catch(error){
+      console.log(error);
+      throw error;
+    }
   }
   // TODO: Create destructureLocationData method
   private destructureLocationData(locationData: any[]): Coordinates {
