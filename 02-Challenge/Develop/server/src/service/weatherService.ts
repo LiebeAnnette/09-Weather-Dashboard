@@ -4,8 +4,8 @@ dotenv.config();
 
 // X TODO: Define an interface for the Coordinates object
 interface Coordinates {
-  latitude: number;
-  longitude: number;
+  lat: number;
+  lon: number;
   country: string;
   state: string;
   name: string;
@@ -25,7 +25,7 @@ interface Coordinates {
       this.humidity = humidity;
       this.windSpeed = windSpeed;
       this.cityName = cityName;
-      this.date = date;
+      this.date = dayjs(date).format("YYYY-MM-DD HH:mm");
     }
   }
 
@@ -43,23 +43,24 @@ class WeatherService {
   }
 
   // TODO: Create fetchLocationData method
-  private async fetchLocationData(query: string) {
+  private async fetchLocationData(query: string): Promise<Coordinates[]> {
     try {
-      const response: Coordinates[] = await fetch(query).then(
-        (res) => res.json()
-      );
-      return await response[0];
-
-    } catch(error){
+      const response: Coordinates[] = await fetch(query).then((res) => res.json());
+      return response; // Ensure this returns an array
+    } catch (error) {
       console.log(error);
       throw error;
     }
   }
+  
   // TODO: Create destructureLocationData method
-  private destructureLocationData(locationData: any[]): Coordinates {
+  private destructureLocationData(locationData: Coordinates[]): Coordinates {
     return {
-      latitude: locationData[0].lat,
-      longitude: locationData[0].lon,
+      lat: locationData[0].lat,
+      lon: locationData[0].lon,
+      country: locationData[0].country,
+      state: locationData[0].state,
+      name: locationData[0].name,
     };
   }
   // TODO: Create buildGeocodeQuery method
@@ -69,7 +70,7 @@ class WeatherService {
   
   // TODO: Create buildWeatherQuery method
   private buildWeatherQuery(coordinates: Coordinates): string {
-    return `${this.baseURL}/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${this.APIKey}`;  
+    return `${this.baseURL}/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.APIKey}`;  
 }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData(): Promise<Coordinates> {
@@ -87,7 +88,9 @@ class WeatherService {
       response.main.temp,
       response.weather[0].description,
       response.main.humidity,
-      response.wind.speed
+      response.wind.speed,
+      response.name,
+      response.dt,
     );
   }
   // TODO: Complete buildForecastArray method
@@ -98,7 +101,9 @@ class WeatherService {
         data.main.temp,
         data.weather[0].description + (isSameAsCurrent ? " (Current)" : ""),
         data.main.humidity,
-        data.wind.speed
+        data.wind.speed,
+        data.city.name,
+        data.date,
       );
     });
   }
@@ -109,6 +114,7 @@ class WeatherService {
   const weatherResponse = await this.fetchWeatherData(coordinates);
 
   const currentWeather = this.parseCurrentWeather(weatherResponse);
+  
   const forecastArray = this.buildForecastArray(currentWeather, weatherResponse.forecast || []);
 
   return { current: currentWeather, forecast: forecastArray };
@@ -116,8 +122,4 @@ class WeatherService {
   }
 }
 
-export default new WeatherService(
-  process.env.API_BASE_URL || "",
-  process.env.API_KEY || "",
-  "New York" // Default city
-);
+export default new WeatherService;

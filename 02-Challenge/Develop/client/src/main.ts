@@ -44,7 +44,7 @@ if (!form) {
 }
 
 async function handleFormSubmit() {
-  const cityInput = document.querySelector('#city') as HTMLInputElement | null;
+  const cityInput = document.querySelector('#search-input') as HTMLInputElement | null;
   if (!cityInput) {
       console.error('City input field not found');
       return;
@@ -55,9 +55,9 @@ async function handleFormSubmit() {
       console.error('City name is required');
       return;
   }
-
+console.log(cityName)
   try {
-      const response = await fetch('/weather', {
+      const response = await fetch('/api/weather', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ city: cityName }),
@@ -82,7 +82,7 @@ const fetchWeather = async (cityName: string) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ cityName }),
+    body: JSON.stringify({ city: cityName }),
   });
 
   const weatherData = await response.json();
@@ -119,8 +119,10 @@ Render Functions
 */
 
 const renderCurrentWeather = (currentWeather: any): void => {
+  console.log(currentWeather)
   const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
-    currentWeather;
+    
+  currentWeather.current;
 
   // convert the following to typescript
   heading.textContent = `${city} (${date})`;
