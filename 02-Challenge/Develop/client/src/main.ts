@@ -89,8 +89,8 @@ const fetchWeather = async (cityName: string) => {
 
   console.log('weatherData: ', weatherData);
 
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
+  renderCurrentWeather(weatherData.current);
+  renderForecast(weatherData.forecast);
 };
 
 const fetchSearchHistory = async () => {
@@ -118,11 +118,11 @@ Render Functions
 
 */
 
-const renderCurrentWeather = (currentWeather: any): void => {
-  console.log(currentWeather)
+const renderCurrentWeather = (todayContainer: any): void => {
+  console.log(todayContainer)
   const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
-    
-  currentWeather.current;
+  
+  todayContainer;
 
   // convert the following to typescript
   heading.textContent = `${city} (${date})`;
@@ -335,9 +335,9 @@ searchHistoryContainer?.addEventListener('click', handleSearchHistoryClick);
 getAndRenderHistory();
 
 function displayWeather(data: any, cityName: string) {
-  const weatherContainer = document.querySelector('#weather-container');
-  if (weatherContainer) {
-      weatherContainer.innerHTML = `
+  const forecastContainer = document.querySelector('#forecast');
+  if (forecastContainer) {
+      forecastContainer.innerHTML = `
           <h2>Weather for ${cityName}</h2>  
           <p>Temperature: ${data.current?.temperature ?? 'N/A'}°C</p>
           <p>Conditions: ${data.current?.description ?? 'Unknown'}</p>
